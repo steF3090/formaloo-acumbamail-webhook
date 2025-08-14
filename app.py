@@ -15,8 +15,11 @@ ACUMBAMAIL_LIST_ID = "1154863"
 def home():
     return "Webhook server is running! ✅"
 
-@app.route('/webhook', methods=['POST'])
+@app.route('/webhook', methods=['GET', 'POST'])
 def handle_webhook():
+    if request.method == 'GET':
+        return jsonify({"message": "Webhook endpoint is working! Use POST to send data."}), 200
+    
     try:
         data = request.get_json()
         logger.info(f"Received webhook data: {data}")
@@ -43,7 +46,6 @@ def handle_webhook():
     except Exception as e:
         logger.error(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
-
 def add_to_acumbamail(email):
     url = "https://acumbamail.com/api/v1/addSubscriber/"
     
@@ -69,4 +71,5 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print("🚀 Starting webhook server...")
     print(f"Server running on port {port}")
+
     app.run(debug=False, host='0.0.0.0', port=port)
