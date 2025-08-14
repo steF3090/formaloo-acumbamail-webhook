@@ -48,6 +48,7 @@ def handle_webhook():
     except Exception as e:
         logger.error(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
 def add_to_acumbamail(email):
     url = "https://acumbamail.com/api/1/addSubscriber/"
     
@@ -55,7 +56,7 @@ def add_to_acumbamail(email):
         'auth_token': ACUMBAMAIL_TOKEN,
         'list_id': ACUMBAMAIL_LIST_ID,
         'email': email,
-        'merge_fields': {}  # Add empty merge_fields
+        'merge_fields': '{}'  # JSON string format
     }
     
     try:
@@ -74,9 +75,7 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     print("🚀 Starting webhook server...")
     print(f"Server running on port {port}")
-
     app.run(debug=False, host='0.0.0.0', port=port)
-
 
 
 
