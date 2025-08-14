@@ -25,7 +25,7 @@ def handle_webhook():
         logger.info(f"Received webhook data: {data}")
         
         # Extract email using your specific field name
-        email = data.get('Emailtest1')  # Your exact field name from Formaloo
+        email = data.get('Email')  # Your exact field name from Formaloo
         
         if not email:
             logger.error("No email found in Emailtest1 field!")
@@ -73,3 +73,4 @@ if __name__ == '__main__':
     print(f"Server running on port {port}")
 
     app.run(debug=False, host='0.0.0.0', port=port)
+
