@@ -54,7 +54,8 @@ def add_to_acumbamail(email):
     payload = {
         'auth_token': ACUMBAMAIL_TOKEN,
         'list_id': ACUMBAMAIL_LIST_ID,
-        'email': email
+        'email': email,
+        'merge_fields': {}  # Add empty merge_fields
     }
     
     try:
@@ -75,6 +76,7 @@ if __name__ == '__main__':
     print(f"Server running on port {port}")
 
     app.run(debug=False, host='0.0.0.0', port=port)
+
 
 
 
