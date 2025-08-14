@@ -49,7 +49,7 @@ def handle_webhook():
         logger.error(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 def add_to_acumbamail(email):
-    url = "https://acumbamail.com/api/v1/addSubscriber/"
+    url = "https://acumbamail.com/api/1/addSubscriber/"
     
     payload = {
         'auth_token': ACUMBAMAIL_TOKEN,
@@ -75,5 +75,6 @@ if __name__ == '__main__':
     print(f"Server running on port {port}")
 
     app.run(debug=False, host='0.0.0.0', port=port)
+
 
 
