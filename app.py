@@ -63,8 +63,10 @@ def add_to_acumbamail(email):
     except requests.RequestException as e:
         logger.error(f"Acumbamail API error: {str(e)}")
         return False
-
+        
 if __name__ == '__main__':
+    import os
+    port = int(os.environ.get('PORT', 5000))
     print("🚀 Starting webhook server...")
-    print("Visit http://localhost:5000 to test")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    print(f"Server running on port {port}")
+    app.run(debug=False, host='0.0.0.0', port=port)
