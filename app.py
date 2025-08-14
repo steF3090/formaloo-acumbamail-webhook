@@ -1,0 +1,70 @@
+from flask import Flask, request, jsonify
+import requests
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = Flask(__name__)
+
+# Your actual credentials
+ACUMBAMAIL_TOKEN = "a2f90a65fd8b4cc9bbf041d40ddc3e26"
+ACUMBAMAIL_LIST_ID = "1154863"
+
+@app.route('/')
+def home():
+    return "Webhook server is running! ✅"
+
+@app.route('/webhook', methods=['POST'])
+def handle_webhook():
+    try:
+        data = request.get_json()
+        logger.info(f"Received webhook data: {data}")
+        
+        # Extract email using your specific field name
+        email = data.get('Emailtest1')  # Your exact field name from Formaloo
+        
+        if not email:
+            logger.error("No email found in Emailtest1 field!")
+            return jsonify({"error": "No email found"}), 400
+        
+        logger.info(f"Processing email: {email}")
+        
+        # Add to Acumbamail
+        success = add_to_acumbamail(email)
+        
+        if success:
+            logger.info(f"✅ Successfully added {email} to Acumbamail")
+            return jsonify({"status": "success", "email": email}), 200
+        else:
+            logger.error(f"❌ Failed to add {email} to Acumbamail")
+            return jsonify({"status": "error"}), 500
+            
+    except Exception as e:
+        logger.error(f"Error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+def add_to_acumbamail(email):
+    url = "https://acumbamail.com/api/v1/addSubscriber/"
+    
+    payload = {
+        'auth_token': ACUMBAMAIL_TOKEN,
+        'list_id': ACUMBAMAIL_LIST_ID,
+        'email': email
+    }
+    
+    try:
+        logger.info(f"Sending to Acumbamail: {email}")
+        response = requests.post(url, data=payload, timeout=15)
+        logger.info(f"Acumbamail response: {response.status_code} - {response.text}")
+        
+        return response.status_code == 200
+        
+    except requests.RequestException as e:
+        logger.error(f"Acumbamail API error: {str(e)}")
+        return False
+
+if __name__ == '__main__':
+    print("🚀 Starting webhook server...")
+    print("Visit http://localhost:5000 to test")
+    app.run(debug=True, host='0.0.0.0', port=5000)
